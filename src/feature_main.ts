@@ -1,18 +1,41 @@
-import colors from 'colors';
 import { Command, Option } from 'commander';
+import {
+  nextJsGenerator,
+  reactGenerator,
+  reactNativeGenerator,
+} from './generators';
 import inquirer from 'inquirer';
+import colors from 'colors';
 
-const TemplateOptions = ['react', 'react-native', 'next'];
+export enum TemplateOptions {
+  'react' = 'react',
+  'react-native' = 'react-native',
+  'next' = 'next',
+}
 
-interface QuestionList {
+export interface TOptions {
   appName?: string;
-  template?: string;
+  template?: keyof typeof TemplateOptions;
   useTypescript?: boolean;
   useNpm?: boolean;
 }
 
+const switcher = (options: TOptions) => {
+  switch (options.template) {
+    case 'react':
+      reactGenerator(options);
+      break;
+    case 'react-native':
+      reactNativeGenerator(options);
+    case 'next':
+      nextJsGenerator(options);
+    default:
+      break;
+  }
+};
+
 const main = async () => {
-  const options: QuestionList = {
+  const options: TOptions = {
     useTypescript: false,
     useNpm: false,
     appName: undefined,
@@ -25,7 +48,7 @@ const main = async () => {
     .addOption(new Option('-n --name <appName>', 'app name (use quotes)'))
     .addOption(
       new Option('-t, --template <template>', 'choose which template').choices(
-        TemplateOptions
+        Object.keys(TemplateOptions)
       )
     )
     .addOption(new Option('-ts, --typescript', 'use typescript'))
@@ -56,12 +79,15 @@ const main = async () => {
       name: 'template',
       message: 'Which template do you want? ',
       type: 'list',
-      default: TemplateOptions[0],
-      choices: TemplateOptions,
+      default: Object.keys(TemplateOptions)[0],
+      choices: Object.keys(TemplateOptions),
     });
 
     options.template = template;
   } else {
+    const _template = flags.template;
+    console.log(colors.gray('→ using template'), colors.green(_template));
+    options.template = _template;
   }
 
   // HANDLE TYPESCRIPT FLAG
@@ -94,7 +120,7 @@ const main = async () => {
     options.useNpm = true;
   }
 
-  console.log('\nOPTIONS: ', options);
+  switcher(options);
 };
 
 main().catch(console.log);
