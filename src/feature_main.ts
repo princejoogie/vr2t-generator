@@ -22,7 +22,7 @@ const main = async () => {
   const program = new Command();
   program.version('0.0.1');
   program
-    .addOption(new Option('-n --name <appName>', 'app name'))
+    .addOption(new Option('-n --name <appName>', 'app name (use quotes)'))
     .addOption(
       new Option('-t, --template <template>', 'choose which template').choices(
         TemplateOptions
