@@ -14,21 +14,26 @@ export enum TemplateOptions {
 }
 
 export interface TOptions {
-  appName?: string;
+  appName: string;
   template?: keyof typeof TemplateOptions;
-  useTypescript?: boolean;
-  useNpm?: boolean;
+  useTypescript: boolean;
+  useNpm: boolean;
 }
 
 const switcher = (options: TOptions) => {
   switch (options.template) {
-    case 'react':
+    case 'react': {
       reactGenerator(options);
       break;
-    case 'react-native':
+    }
+    case 'react-native': {
       reactNativeGenerator(options);
-    case 'next':
+      break;
+    }
+    case 'next': {
       nextJsGenerator(options);
+      break;
+    }
     default:
       break;
   }
@@ -38,7 +43,7 @@ const main = async () => {
   const options: TOptions = {
     useTypescript: false,
     useNpm: false,
-    appName: undefined,
+    appName: '',
     template: undefined,
   };
 
