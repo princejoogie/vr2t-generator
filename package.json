@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "colors": "^1.4.0",
-    "inquirer": "^8.1.2"
+    "inquirer": "^9.1.0"
   },
   "devDependencies": {
     "@types/inquirer": "^8.1.1",
